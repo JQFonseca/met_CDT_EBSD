@@ -33,3 +33,6 @@ def c5read(fname):
     #emap=np.array(data_list).reshape(ydim,xdim,3) 
 
     return data_list
+
+
+# the end
