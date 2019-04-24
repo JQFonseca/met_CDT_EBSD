@@ -1,0 +1,46 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import re
+re.compile('<title>(.*)</title>')
+
+def c5read(fname):
+
+    data_list=[]
+    f=open(fname,'r')
+    print ("Reading file...")
+    for line in f:
+        if line[0:2]=='XC':
+            xdim=int(line.split()[1])   
+            print ('xdim=',xdim)
+            
+        if line[0:2]=='YC':
+            ydim=int(line.split()[1])
+            print ('ydim=',ydim)
+                 
+        if re.match('\d\s',line) != None: 
+            if int(line.split()[0]) == 1:
+                eulers=line.split()[5:8] 
+                for x in range(len(eulers)):
+                    eulers[x]=float(eulers[x])
+                data_list.append(np.array(eulers))
+            else:
+                eulers=line.split()[5:8]
+                for x in range(len(eulers)):
+                    eulers[x]=float('0.0')
+                data_list.append(np.array(eulers)) 
+    f.close()
+    
+    Angles=[360,60,90]
+    RGB=[256,256,256]
+    
+    #For creating an array from the list and changing the eulers to RGB value 
+    emap=np.array(data_list)/Angles*RGB
+    emap=emap.reshape(ydim,xdim,3) 
+    
+    # For imshow the RGB value has to be float between 0-1 or int between 0-255 
+    # changing the float type to int type then plot the image 
+    emap=emap.astype(np.int)
+    
+    print ("Done!")
+    plt.imshow(emap)
+    c5read("Nickel.ctf") 
